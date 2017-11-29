@@ -1,0 +1,2 @@
+python-binance==0.4.1
+plotly==2.2.2

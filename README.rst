@@ -13,4 +13,4 @@ Quick Start
 
 	pip install -r requirements.txt
 
-Also take a look at `python-binance requirements.txt <https://github.com/sammchardy/python-binance>`_ of its dependencies.
+Also be sure to install dependencies of `python-binance <https://github.com/sammchardy/python-binance>`_

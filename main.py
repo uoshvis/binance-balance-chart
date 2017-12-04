@@ -2,12 +2,11 @@ from binance.client import Client
 import plotly.graph_objs as go
 import plotly.offline as py
 
-api_key = ''
-api_secret = ''
+import config
 
 
 def main():
-    client = Client(api_key, api_secret)
+    client = Client(config.api_key, config.api_secret)
 
     # Get account information
     account = client.get_account()
@@ -16,10 +15,24 @@ def main():
     my_balance = {}
     for balance in account['balances']:
         if float(balance['free']) > 0:
-            my_balance[balance['asset']] = {'free': balance['free']}
+            my_balance[balance['asset']] = {'free': float(balance['free'])}
 
     # Get current prices
     prices = client.get_all_tickers()
+
+    # Add wallet data from config file
+    '''
+        wallet = {
+            'symbol_1': amount,
+            'symbol_2': amount
+        }
+    '''
+    for k, v in config.wallet.items():
+        if k in list(my_balance.keys()):
+            my_balance[k]['free'] = my_balance[k]['free'] + v
+        else:
+            my_balance[k] = {}
+            my_balance[k]['free'] = v
 
     # Filter only BTC prices by account assets and calculate total value
     for price in prices:
@@ -27,7 +40,7 @@ def main():
         if symbol[-3:] == 'BTC' and symbol[:-3] in list(my_balance.keys()):
             my_asset = my_balance[symbol[:-3]]
             my_asset['price'] = price['price']
-            my_asset['value_BTC'] = (float(price['price']) * float(my_asset['free']))
+            my_asset['value_BTC'] = (float(price['price']) * my_asset['free'])
 
     # Extract labels and values for chart
     labels = []

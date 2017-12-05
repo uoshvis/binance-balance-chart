@@ -5,6 +5,17 @@ import plotly.offline as py
 import config
 
 
+def plot_pie(values, labels):
+    # Plot pie chart
+
+    total_BTC = sum(values)
+    title = 'Estimated value: ' + str(total_BTC) + ' BTC'
+    layout = go.Layout(title=title)
+    trace = go.Pie(labels=labels, values=values)
+    fig = go.Figure(data=[trace], layout=layout)
+    py.plot(fig, filename='binance_balance_chart.html')
+
+
 def main():
     client = Client(config.api_key, config.api_secret)
 
@@ -53,14 +64,7 @@ def main():
         else:
             values.append(value['value_BTC'])
 
-    total_BTC = sum(values)
-
-    # Plot pie chart
-    title = 'Estimated value: ' + str(total_BTC) + ' BTC'
-    layout = go.Layout(title=title)
-    trace = go.Pie(labels=labels, values=values)
-    fig = go.Figure(data=[trace], layout=layout)
-    py.plot(fig, filename='binance_balance_chart.html')
+    plot_pie(values, labels)
 
     # TODO add locked values to see reserved portion
 
